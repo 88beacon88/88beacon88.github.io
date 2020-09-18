@@ -1,0 +1,79 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>上傳Firebase</title>
+    <link rel="stylesheet" href="style.css">
+
+
+</head>
+<body>
+    <div>
+        <input type="file" id="photo" multiple/>
+        <img id="image"/>
+        <button onclick="loadImage()">預覽</button>
+        <h4> 儲存至哪個資料夾：</h4>
+        <input type="text" id="file" placeholder="可空白">
+        <button onclick="uploadImage()">Upload Image</button>
+    </div>
+        <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-storage.js"></script>
+        <script>
+            var firebaseConfig = {
+                apiKey: "AIzaSyChZNPw8nZ67fBv0ahkH33XJ_H81fTBS7w",
+                authDomain: "loginui-c09af.firebaseapp.com",
+                databaseURL: "https://loginui-c09af.firebaseio.com",
+                projectId: "loginui-c09af",
+                storageBucket: "loginui-c09af.appspot.com",
+                messagingSenderId: "583049091839",
+                appId: "1:583049091839:web:9a30797fa8f15ec49b8aca"
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            console.log(firebase);
+            var cnt=0;
+            function uploadImage() {
+                var storageRef = firebase.storage().ref();
+                var files = document.querySelector("#photo").files;
+                const place = document.querySelector("#file").value;
+                var file;
+                var metadata = {
+                    contentType: 'image/jpeg'
+                };
+                for (var i = 0; i < files.length; i++) {
+                    file = files[i];
+                    var name = file.name;
+                    if (place == "") {
+                    var task = storageRef.child(name).put(file, metadata);
+                } else {
+                    var task = storageRef.child(place + '/' + name).put(file, metadata);
+                }
+                task
+                    .then(snapshot => snapshot.ref.getDownloadURL())
+                    .then(url => {
+                        console.log(url);
+                                   
+                    })
+                    .catch(console.error);
+                }
+             alert("照片上傳成功");        
+            }
+             function loadImage() {
+                 var file = document.querySelector("#photo").files[cnt];
+                 document.querySelector("#image").src = URL.createObjectURL(file);           
+                 cnt++;                          
+                 }
+  
+
+ 
+            
+          </script>
+
+</body>
+
+
+</html>
+
